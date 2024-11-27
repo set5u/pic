@@ -8,6 +8,9 @@ dependencies:
   nuxt:
     specifier: ^3.14.1592
     version: 3.14.1592(typescript@5.7.2)(vite@5.4.11)
+  prettier:
+    specifier: ^3.4.1
+    version: 3.4.1
   vue:
     specifier: latest
     version: 3.5.13(typescript@5.7.2)
@@ -4555,6 +4558,12 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.1.1
       source-map-js: 1.2.1
+    dev: false
+
+  /prettier@3.4.1:
+    resolution: {integrity: sha512-G+YdqtITVZmOJje6QkXQWzl3fSfMxFwm1tjTyo9exhkmWSqC4Yhd1+lug++IlR2mvRVAxEDDWYkQdeSztajqgg==}
+    engines: {node: '>=14'}
+    hasBin: true
     dev: false
 
   /pretty-bytes@6.1.1:
