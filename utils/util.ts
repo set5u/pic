@@ -88,5 +88,77 @@ export const create = (w: number, d: number[]): Board => {
   }
   return [o, s, r];
 };
-export const match = (b: Board) => {};
+export const sliceX = (b: Board, x: number) => {
+  return Array.from({ length: b[1].length }).map(
+    (_, j) => b[2][j * b[0].length + x]
+  );
+};
+export const sliceY = (b: Board, y: number) => {
+  return Array.from({ length: b[0].length }).map(
+    (_, j) => b[2][y * b[0].length + j]
+  );
+};
+export const first = (b: number[], n: number[]): number[] | null => {
+  let p = 0;
+  const r: number[] = [];
+  for (let i = 0; i < n.length; i++, p++) {
+    let f = -1;
+    for (let j = 0; j < n[i]; j++, p++) {
+      if (b[p] === -1) {
+        f = j;
+        break;
+      }
+    }
+    if (f === -1) {
+      r.push(p - n[i]);
+    } else {
+      i--;
+    }
+  }
+  if (p > b.length + 1) {
+    return null;
+  }
+  return r;
+};
+
+export const next = (b: number[], r: number[], n: number[]): boolean => {
+  for (let i = 0; i < n.length; i++) {
+    r[n.length - i - 1]++;
+    const p = first(b.slice(r[n.length - i - 1]), n.slice(n.length - i - 1));
+    if (p) {
+      const q = r[n.length - i - 1];
+      p.forEach((v, j) => (r[n.length - i - 1 + j] = v + q));
+      return false;
+    }
+  }
+  return true;
+};
+export const match = (b: number[], n: number[]) => {
+  const r = first(b, n);
+  if (!r) {
+    return null;
+  }
+  const e = n.map(() => -1);
+  while (true) {
+    for (let i = 0; i < n.length; i++) {
+      let f = false;
+      for (let j = 0; j < n[i]; j++) {
+        if (b[r[i] + j] !== 1) {
+          f = true;
+          break;
+        }
+      }
+      f ||= (b[r[i] - 1] || 0) === 1;
+      f ||= b[r[i] + n[i]] === 1;
+      if (!f && e[i] === -1) {
+        e[i] = r[i];
+      }
+    }
+
+    if (next(b, r, n)) {
+      break;
+    }
+  }
+  return e;
+};
 export const solve = (b: Board) => {};
