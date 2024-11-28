@@ -148,8 +148,8 @@ export const match = (b: number[], n: number[]) => {
           break;
         }
       }
-      f ||= (b[r[i] - 1] || 0) === 1;
-      f ||= b[r[i] + n[i]] === 1;
+      f ||= (b[r[i] - 1] ?? -1) !== -1;
+      f ||= (b[r[i] + n[i]] ?? -1) !== -1;
       if (!f && e[i] === -1) {
         e[i] = r[i];
       }
