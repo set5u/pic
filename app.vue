@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 // const s = 15
-const w = 40
-const h = 30
+const w = 20
+const h = 15
 const d = rad(w, h)
 const g = ref(true)
 const b = ref(create(w, d))
