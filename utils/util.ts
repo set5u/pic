@@ -42,7 +42,7 @@ export const string = (w: number, d: number[]) => {
     if (i % w === 0) {
       r.push("\n");
     }
-    r.push(d[i] ? "■" : "□");
+    r.push(d[i] === 1 ? "■" : "□");
   }
   return r.join("").substring(1);
 };
@@ -161,7 +161,34 @@ export const match = (b: number[], n: number[]) => {
   }
   return e;
 };
-export const solve = (b: Board) => {};
+export const solve = (b: Board, cb?: (i: number) => void) => {
+  let p = 0;
+  const q = part(b);
+  if (!q) {
+    return false;
+  }
+  while (b[2].includes(0) && p < b[2].length) {
+    const i = b[2].indexOf(0, p);
+    if (i === -1) {
+      break;
+    }
+    const c = b[2].slice();
+    c[i] = 1;
+    const r = part([b[0], b[1], c]);
+    if (r) {
+      p = i + 1;
+    } else {
+      b[2][i] = -1;
+    }
+    const a = b[2].toString();
+    part(b);
+    if (a !== b[2].toString()) {
+      cb?.(p);
+      p = 0;
+    }
+  }
+  return true;
+};
 export const part = (b: Board) => {
   let updated = true;
   while (updated && b[2].some((v) => v === 0)) {
@@ -227,4 +254,17 @@ export const expand = (r: number[], n: number[], w: number) => {
     }
   }
   return e;
+};
+export const fix = (w: number, d: number[], cb?: (i: number) => void) => {
+  while (true) {
+    const l = create(w, d);
+    solve(l);
+    const s = l[2].map((v, i) => (v === 0 ? i : -1)).filter((v) => v !== -1);
+    if (!s.length) {
+      return;
+    }
+    const o = Math.floor(Math.random() * s.length);
+    cb?.(s[o]);
+    d[s[o]] = 1;
+  }
 };

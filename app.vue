@@ -1,5 +1,7 @@
 <template>
 <div>
+  <div v-if="g">Generating....<br>It may take a while.</div>
+  <template v-else>
   <table>
     <tbody>
       <tr>
@@ -16,6 +18,7 @@
   </table>
   <button @click="c">C</button>
   <button v-if="s.length" @click="r">R</button>
+</template>
 </div>
 </template>
 
@@ -24,10 +27,12 @@
 const w = 20
 const h = 15
 const d = rad(w, h)
-log(w, d)
+const g = ref(true)
 const b = ref(create(w, d))
-const rb = create(w, d)
+let rb = create(w, d)
 const a = () => {
+  b.value[0] = rb[0].slice()
+  b.value[1]=rb[1].slice()
   rb[2].forEach((v,i)=>b.value[2][i]=v)
 }
 for (let i = 0; i < w * h; i++){
@@ -50,6 +55,9 @@ const sy:Ref<number[]|null>[] = []
 for (let i = 0; i < rb[1].length; i++){
   sy.push(computed(()=>match(sliceY(b.value,i),rb[1][i])))
 }
-part(rb)
-a()
+setTimeout(() => {
+  fix(w,d)
+  a()
+  g.value=false
+})
 </script>
