@@ -150,7 +150,7 @@ export const match = (b: number[], n: number[]) => {
       }
       f ||= (b[r[i] - 1] ?? -1) !== -1;
       f ||= (b[r[i] + n[i]] ?? -1) !== -1;
-      if (!f && e[i] === -1) {
+      if (!f && e[i] === -1 && !e.includes(r[i])) {
         e[i] = r[i];
       }
     }
@@ -162,3 +162,69 @@ export const match = (b: number[], n: number[]) => {
   return e;
 };
 export const solve = (b: Board) => {};
+export const part = (b: Board) => {
+  let updated = true;
+  while (updated && b[2].some((v) => v === 0)) {
+    updated = false;
+    for (let i = 0; i < b[0].length; i++) {
+      const l = line(sliceX(b, i), b[0][i]);
+      if (l) {
+        for (let j = 0; j < l.length; j++) {
+          if (b[2][j * b[0].length + i] !== l[j]) {
+            updated = true;
+            b[2][j * b[0].length + i] = l[j];
+          }
+        }
+      } else {
+        return false;
+      }
+    }
+    for (let i = 0; i < b[1].length; i++) {
+      const l = line(sliceY(b, i), b[1][i]);
+      if (l) {
+        for (let j = 0; j < l.length; j++) {
+          if (b[2][i * b[0].length + j] !== l[j]) {
+            updated = true;
+            b[2][i * b[0].length + j] = l[j];
+          }
+        }
+      } else {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+export const line = (b: number[], n: number[]) => {
+  const r = first(b, n);
+  if (!r) {
+    return false;
+  }
+  const e = b.map(() => -2);
+  while (true) {
+    const c = expand(r, n, b.length);
+    if (!c.some((v, i) => b[i] === 1 && v === -1)) {
+      c.forEach((v, i) => {
+        if (e[i] === -2 || v === e[i]) {
+          e[i] = v;
+        } else {
+          e[i] = 0;
+        }
+      });
+    }
+    if (next(b, r, n)) {
+      return e[0] === -2 ? false : e;
+    }
+  }
+};
+export const expand = (r: number[], n: number[], w: number) => {
+  const e = Array(w).fill(-1);
+  for (let i = 0; i < n.length; i++) {
+    const c = n[i];
+    const d = r[i];
+    for (let j = 0; j < c; j++) {
+      e[d + j] = 1;
+    }
+  }
+  return e;
+};
